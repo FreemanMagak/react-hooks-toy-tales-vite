@@ -1,15 +1,29 @@
 import React from "react";
 
-function ToyForm() {
+function ToyForm({ onAddToy }) {
+  const [name, setName] = React.useState("");
+  const [image, setImage] = React.useState("");
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    const created = await onAddToy({ name, image });
+    if (created) {
+      setName("");
+      setImage("");
+    }
+  }
+
   return (
     <div className="container">
-      <form className="add-toy-form">
+      <form className="add-toy-form" onSubmit={handleSubmit}>
         <h3>Create a toy!</h3>
         <input
           type="text"
           name="name"
           placeholder="Enter a toy's name..."
           className="input-text"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
         />
         <br />
         <input
@@ -17,6 +31,8 @@ function ToyForm() {
           name="image"
           placeholder="Enter a toy's image URL..."
           className="input-text"
+          value={image}
+          onChange={(event) => setImage(event.target.value)}
         />
         <br />
         <input

@@ -9,6 +9,7 @@ describe("ToyForm Submission", () => {
     const { getByPlaceholderText, getByText, findByText } = render(<App />);
     const firstToy = {name: "First Toy", image: "new-toy.jpg", id: "3810fqhrquhf9fnqnc0"}
     global.setFetchResponse({...firstToy})
+    const postFetch = global.fetch;
     fireEvent.click(getByText("Add a Toy"));
 
     fireEvent.change(getByPlaceholderText("Enter a toy's name..."), {
@@ -22,5 +23,11 @@ describe("ToyForm Submission", () => {
 
     const newToy = await findByText(firstToy.name)
     expect(newToy).toBeInTheDocument();
+    expect(newToy.parentElement.querySelector("p")).toHaveTextContent("0 Likes");
+    expect(postFetch).toHaveBeenCalledWith("http://localhost:3001/toys", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: firstToy.name, image: firstToy.image, likes: 0 }),
+    });
   });
 });
