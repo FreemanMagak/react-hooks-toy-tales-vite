@@ -26,6 +26,7 @@ describe("Liking a Toy", () => {
             "image": "http://www.pngmart.com/files/3/Toy-Story-Woody-PNG-Photos.png",
             "likes": 9
         })
+        const patchFetch = global.fetch;
 
         fireEvent.click(likeButton);
 
@@ -34,6 +35,11 @@ describe("Liking a Toy", () => {
         likes = parseInt(toyCard.querySelector('p').textContent.split(' ')[0])
         
         expect(likes).toBe(9);
+        expect(patchFetch).toHaveBeenCalledWith("http://localhost:3001/toys/1", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ likes: 9 }),
+        });
 
         global.setFetchResponse({
             "id": 1,

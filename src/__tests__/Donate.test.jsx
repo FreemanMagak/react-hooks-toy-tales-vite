@@ -6,6 +6,7 @@ import '@testing-library/jest-dom';
 describe("Deleting a Toy", () => {
     it("removes the toy when donate button is clicked", async () => {
         global.setFetchResponse(global.baseToys)
+        const deleteFetch = global.fetch;
         const {findByText, getAllByText } = render(<App />);
     
         const woody = await findByText("Woody")
@@ -17,6 +18,9 @@ describe("Deleting a Toy", () => {
         const deletedWoody = await findByText("Woody")
     
         expect(deletedWoody).not.toBeInTheDocument()
+        expect(deleteFetch).toHaveBeenCalledWith("http://localhost:3001/toys/1", {
+            method: "DELETE",
+        });
     });
 });
   

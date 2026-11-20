@@ -6,9 +6,11 @@ import '@testing-library/jest-dom';
 describe('1st Deliverable', () => {
   test('Displays all toys on startup', async () => {
     global.setFetchResponse(global.baseToys)
+    const fetchMock = global.fetch;
     let { findAllByTestId } = render(<App />);
     const toyCards = await findAllByTestId('toy-card');
     expect(toyCards).toHaveLength(global.baseToys.length);
+    expect(fetchMock).toHaveBeenCalledWith('http://localhost:3001/toys');
 
     const toyNames = toyCards.map((toyCard) => toyCard.querySelector('h2').textContent);
     const baseToyNames = global.baseToys.map((toy) => toy.name);
